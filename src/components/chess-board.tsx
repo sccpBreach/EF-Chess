@@ -1,15 +1,15 @@
 import { cn } from "@/lib/utils";
+import { PIECES } from "@/assets/pieces";
 
-// Visual-only board for the polished shell. Real piece logic will use chess.js + CM-Chessboard later.
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
 const RANKS = [8, 7, 6, 5, 4, 3, 2, 1] as const;
 
-// Unicode chess glyphs — high-fidelity, no asset dependency
+// Starting position in piece-letter notation (uppercase = white, lowercase = black)
 const STARTING: Record<string, string> = {
-  a8: "♜", b8: "♞", c8: "♝", d8: "♛", e8: "♚", f8: "♝", g8: "♞", h8: "♜",
-  a7: "♟", b7: "♟", c7: "♟", d7: "♟", e7: "♟", f7: "♟", g7: "♟", h7: "♟",
-  a2: "♙", b2: "♙", c2: "♙", d2: "♙", e2: "♙", f2: "♙", g2: "♙", h2: "♙",
-  a1: "♖", b1: "♘", c1: "♗", d1: "♕", e1: "♔", f1: "♗", g1: "♘", h1: "♖",
+  a8: "r", b8: "n", c8: "b", d8: "q", e8: "k", f8: "b", g8: "n", h8: "r",
+  a7: "p", b7: "p", c7: "p", d7: "p", e7: "p", f7: "p", g7: "p", h7: "p",
+  a2: "P", b2: "P", c2: "P", d2: "P", e2: "P", f2: "P", g2: "P", h2: "P",
+  a1: "R", b1: "N", c1: "B", d1: "Q", e1: "K", f1: "B", g1: "N", h1: "R",
 };
 
 export function ChessBoard({ className }: { className?: string }) {
@@ -17,6 +17,7 @@ export function ChessBoard({ className }: { className?: string }) {
     <div
       className={cn(
         "relative aspect-square w-full max-w-[640px] overflow-hidden rounded-md border border-border-strong shadow-panel",
+        "ring-1 ring-inset ring-black/30",
         className,
       )}
     >
@@ -26,7 +27,6 @@ export function ChessBoard({ className }: { className?: string }) {
             const sq = `${file}${rank}`;
             const isLight = (ri + fi) % 2 === 0;
             const piece = STARTING[sq];
-            const isWhite = piece && piece.charCodeAt(0) < 9818;
             return (
               <div
                 key={sq}
@@ -37,10 +37,9 @@ export function ChessBoard({ className }: { className?: string }) {
                     : "var(--color-board-dark)",
                 }}
               >
-                {/* coordinates */}
                 {fi === 0 && (
                   <span
-                    className="absolute left-1 top-0.5 text-[10px] font-medium"
+                    className="absolute left-1 top-0.5 font-mono text-[10px] font-semibold leading-none"
                     style={{ color: isLight ? "var(--color-board-dark)" : "var(--color-board-light)" }}
                   >
                     {rank}
@@ -48,24 +47,20 @@ export function ChessBoard({ className }: { className?: string }) {
                 )}
                 {ri === 7 && (
                   <span
-                    className="absolute bottom-0.5 right-1 text-[10px] font-medium"
+                    className="absolute bottom-0.5 right-1 font-mono text-[10px] font-semibold leading-none"
                     style={{ color: isLight ? "var(--color-board-dark)" : "var(--color-board-light)" }}
                   >
                     {file}
                   </span>
                 )}
                 {piece && (
-                  <span
-                    className="select-none text-[clamp(2rem,5vw,3.5rem)] leading-none"
-                    style={{
-                      color: isWhite ? "oklch(0.98 0.005 80)" : "oklch(0.15 0.01 60)",
-                      textShadow: isWhite
-                        ? "0 1px 2px oklch(0 0 0 / 0.35)"
-                        : "0 1px 1px oklch(1 0 0 / 0.1)",
-                    }}
-                  >
-                    {piece}
-                  </span>
+                  <img
+                    src={PIECES[piece]}
+                    alt={piece}
+                    draggable={false}
+                    className="pointer-events-none h-[85%] w-[85%] select-none"
+                    style={{ filter: "drop-shadow(0 2px 2px oklch(0 0 0 / 0.35))" }}
+                  />
                 )}
               </div>
             );
