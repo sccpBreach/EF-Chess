@@ -85,7 +85,7 @@ function MoveCell({
   san: string;
   active: boolean;
   onClick: () => void;
-  refEl?: React.RefObject<HTMLButtonElement>;
+  refEl?: React.RefObject<HTMLButtonElement | null>;
 }) {
   if (!san) return <span />;
   return (
