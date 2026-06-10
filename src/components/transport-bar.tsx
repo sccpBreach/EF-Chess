@@ -1,20 +1,29 @@
 import { ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function TransportBar() {
+interface Props {
+  onStart: () => void;
+  onPrev: () => void;
+  onFlip: () => void;
+  onNext: () => void;
+  onEnd: () => void;
+}
+
+export function TransportBar({ onStart, onPrev, onFlip, onNext, onEnd }: Props) {
   const btns = [
-    { Icon: ChevronsLeft, label: "Start" },
-    { Icon: ChevronLeft, label: "Previous" },
-    { Icon: RotateCcw, label: "Flip", center: true },
-    { Icon: ChevronRight, label: "Next" },
-    { Icon: ChevronsRight, label: "End" },
+    { Icon: ChevronsLeft, label: "Start", onClick: onStart },
+    { Icon: ChevronLeft, label: "Previous", onClick: onPrev },
+    { Icon: RotateCcw, label: "Flip", onClick: onFlip, center: true },
+    { Icon: ChevronRight, label: "Next", onClick: onNext },
+    { Icon: ChevronsRight, label: "End", onClick: onEnd },
   ];
   return (
     <div className="flex items-center justify-center gap-1 border-t border-border bg-surface/40 px-3 py-3">
-      {btns.map(({ Icon, label, center }) => (
+      {btns.map(({ Icon, label, onClick, center }) => (
         <button
           key={label}
           aria-label={label}
+          onClick={onClick}
           className={cn(
             "flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors",
             "hover:border-border-strong hover:bg-secondary hover:text-foreground",
